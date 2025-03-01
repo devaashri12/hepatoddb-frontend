@@ -1,104 +1,111 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
-import Grid from "@mui/material/Grid";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-
-// Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-
-// Data
-import authorsTableData from "layouts/tables/data/authorsTableData";
-import projectsTableData from "layouts/tables/data/projectsTableData";
+import PropTypes from "prop-types";
 
 function Tables() {
-  const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
+  // Static Columns
+  const [columns] = useState([
+    { Header: "Disease", accessor: "disease", align: "left" },
+    { Header: "Disease ID", accessor: "disease_id", align: "left" },
+    { Header: "Gene ID", accessor: "gene_id", align: "left" },
+    { Header: "Gene Name", accessor: "gene_name", align: "left" },
+    { Header: "Protein Name", accessor: "protein_name", align: "left" },
+    {
+      Header: "Pathway",
+      accessor: "pathway",
+      align: "left",
+      Cell: ({ cell }) => {
+        const value = cell?.value; // Safe access
+        return value && value !== "null" ? (
+          <a
+            href={`https://www.kegg.jp/kegg-bin/show_pathway?${value}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#007bff", textDecoration: "none", fontWeight: "bold" }}
+          >
+            {value}
+          </a>
+        ) : (
+          "null"
+        );
+      },
+    },
+  ]);
+
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  const fetchAllData = async () => {
+    let allRows = [];
+    let page = 1;
+    let totalPages = 1;
+
+    setLoading(true);
+    try {
+      do {
+        const response = await axios.get(`http://localhost:4000/disease?page=${page}&limit=10`);
+        console.log(`API Response (Page ${page}):`, response.data.data); // Debugging API response
+        const newRows = response.data.data.map((item) => ({
+          disease: item.disease || "null",
+          disease_id: item.disease_id || "null",
+          gene_id: item.gene_id || "null",
+          gene_name: item.gene_name || "null",
+          protein_name: item.protein_name || "null",
+          pathway: item.pathway || "null",
+        }));
+
+        allRows = [...allRows, ...newRows];
+        totalPages = response.data.totalPages;
+        page++;
+      } while (page <= totalPages);
+
+      setRows(allRows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setLoading(false);
+  };
 
   return (
     <DashboardLayout>
-      <DashboardNavbar />
-      <MDBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Authors Table
+      <MDBox py={5}>
+        <MDBox>
+          <Card>
+            <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
+              <DataTable
+                table={{ columns, rows }}
+                isSorted={true}
+                showTotalEntries={true}
+                noEndBorder={false}
+                canSearch={true}
+                pagination={true} // Keep inbuilt pagination
+              />
+              {loading && (
+                <MDTypography variant="caption" color="white">
+                  Loading all data...
                 </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Projects Table
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-        </Grid>
+              )}
+            </MDBox>
+          </Card>
+        </MDBox>
       </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
-
+Tables.propTypes = {
+  cell: PropTypes.shape({
+    value: PropTypes.string, // Define 'value' as a string
+  }),
+};
 export default Tables;

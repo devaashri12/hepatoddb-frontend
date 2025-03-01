@@ -185,13 +185,13 @@ export default function App() {
             onMouseLeave={handleOnMouseLeave}
           />
           <Configurator />
-          {configsButton}
+          {/* {configsButton} */}
         </>
       )}
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/tables" />} />
       </Routes>
     </ThemeProvider>
   );
