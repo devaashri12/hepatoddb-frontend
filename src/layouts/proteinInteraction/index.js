@@ -8,7 +8,7 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import PropTypes from "prop-types";
 
-function Dataset() {
+function ProteinInteraction() {
   // Static Columns
   const [columns] = useState([
     { Header: "Disease", accessor: "disease", align: "left" },
@@ -103,9 +103,9 @@ function Dataset() {
     </DashboardLayout>
   );
 }
-Dataset.propTypes = {
+ProteinInteraction.propTypes = {
   cell: PropTypes.shape({
     value: PropTypes.string, // Define 'value' as a string
   }),
 };
-export default Dataset;
+export default ProteinInteraction;
