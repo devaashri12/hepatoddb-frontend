@@ -21,7 +21,7 @@ function Dataset() {
       accessor: "pathway",
       align: "left",
       Cell: ({ cell }) => {
-        const value = cell?.value; // Safe access
+        const value = cell?.value;
         return value && value !== "null" ? (
           <a
             href={`https://www.kegg.jp/kegg-bin/show_pathway?${value}`}
@@ -54,7 +54,7 @@ function Dataset() {
     try {
       do {
         const response = await axios.get(`http://localhost:4000/disease?page=${page}&limit=10`);
-        console.log(`API Response (Page ${page}):`, response.data.data); // Debugging API response
+        console.log(`API Response (Page ${page}):`, response.data.data);
         const newRows = response.data.data.map((item) => ({
           disease: item.disease || "null",
           disease_id: item.disease_id || "null",
@@ -78,34 +78,42 @@ function Dataset() {
 
   return (
     <DashboardLayout>
-      <MDBox py={5}>
-        <MDBox>
-          <Card>
-            <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
-              <DataTable
-                table={{ columns, rows }}
-                isSorted={true}
-                showTotalEntries={true}
-                noEndBorder={false}
-                canSearch={true}
-                pagination={true} // Keep inbuilt pagination
-              />
-              {loading && (
-                <MDTypography variant="caption" color="white">
-                  Loading all data...
-                </MDTypography>
-              )}
-            </MDBox>
-          </Card>
+      {/* Full page layout with flexbox */}
+      <MDBox display="flex" flexDirection="column" minHeight="98vh">
+        {/* Main Content */}
+        <MDBox py={2} flexGrow={1}>
+          <MDBox>
+            <Card>
+              <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted={true}
+                  showTotalEntries={true}
+                  noEndBorder={false}
+                  canSearch={true}
+                  pagination={true}
+                />
+                {loading && (
+                  <MDTypography variant="caption" color="white">
+                    Loading all data...
+                  </MDTypography>
+                )}
+              </MDBox>
+            </Card>
+          </MDBox>
         </MDBox>
+
+        {/* Footer stays at the bottom */}
+        <Footer />
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
+
 Dataset.propTypes = {
   cell: PropTypes.shape({
-    value: PropTypes.string, // Define 'value' as a string
+    value: PropTypes.string,
   }),
 };
+
 export default Dataset;

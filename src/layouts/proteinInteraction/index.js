@@ -21,11 +21,9 @@ function ProteinInteraction() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
-
   const [protein1, setProtein1] = useState("");
   const [protein2, setProtein2] = useState("");
   const [disease, setDisease] = useState("");
-
   const [protein1Options, setProtein1Options] = useState([]);
   const [protein2Options, setProtein2Options] = useState([]);
   const [diseaseOptions, setDiseaseOptions] = useState([]);
@@ -35,7 +33,6 @@ function ProteinInteraction() {
     fetchUniqueValues();
   }, []);
 
-  // Fetch all records initially
   const fetchFilteredData = async () => {
     let allRows = [];
     let page = 1;
@@ -50,7 +47,10 @@ function ProteinInteraction() {
         if (protein2) params.protein2 = protein2;
         if (disease) params.disease = disease;
 
-        const response = await axios.get("http://localhost:4000/protein-interaction", { params });
+        const response = await axios.get(
+          `http://localhost:4000/protein-interaction?page=${page}&limit=10`,
+          { params }
+        );
         const newRows = response.data.data.map((item) => ({
           protein1: item.protein1 || "null",
           protein2: item.protein2 || "null",
@@ -73,7 +73,6 @@ function ProteinInteraction() {
     setLoading(false);
   };
 
-  // Fetch unique values for suggestions
   const fetchUniqueValues = async () => {
     try {
       const response = await axios.get("http://localhost:4000/protein-interaction/unique-values");
@@ -87,102 +86,70 @@ function ProteinInteraction() {
 
   return (
     <DashboardLayout>
-      <MDBox py={5}>
-        <Card sx={{ padding: 3 }}>
-          <MDBox display="flex" gap={2} mb={3}>
-            {/* Autocomplete for Protein 1 */}
-            <Autocomplete
-              options={protein1Options}
-              freeSolo
-              value={protein1}
-              onInputChange={(event, newValue) => setProtein1(newValue)}
-              sx={{ width: "100%" }} // ✅ Ensures full width
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Protein 1"
-                  variant="outlined"
-                  fullWidth
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
-                  InputProps={{
-                    ...params.InputProps,
-                    sx: { height: 50 }, // ✅ Adjusts height
-                  }}
-                />
-              )}
-            />
-            <Autocomplete
-              options={protein2Options}
-              freeSolo
-              value={protein2}
-              onInputChange={(event, newValue) => setProtein2(newValue)}
-              sx={{ width: "100%" }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Protein 2"
-                  variant="outlined"
-                  fullWidth
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
-                  InputProps={{
-                    ...params.InputProps,
-                    sx: { height: 50 },
-                  }}
-                />
-              )}
-            />
-            <Autocomplete
-              options={diseaseOptions}
-              freeSolo
-              value={disease}
-              onInputChange={(event, newValue) => setDisease(newValue)}
-              sx={{ width: "100%" }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Disease"
-                  variant="outlined"
-                  fullWidth
-                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
-                  InputProps={{
-                    ...params.InputProps,
-                    sx: { height: 50 },
-                  }}
-                />
-              )}
-            />
-            <MDButton
-              variant="contained"
-              color="info"
-              onClick={fetchFilteredData}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Filter"}
-            </MDButton>
-          </MDBox>
-
-          <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
-            {loading ? (
-              <MDTypography variant="caption" color="white">
-                Loading data...
-              </MDTypography>
-            ) : noResults ? (
-              <MDTypography variant="h6" color="error" align="center">
-                No results found for the given filters, please check and try again.
-              </MDTypography>
-            ) : (
-              <DataTable
-                table={{ columns, rows }}
-                isSorted={true}
-                showTotalEntries={true}
-                noEndBorder={false}
-                pagination={true}
+      <MDBox display="flex" flexDirection="column" minHeight="108vh">
+        <MDBox py={0} flexGrow={1}>
+          <Card sx={{ padding: 3 }}>
+            <MDBox display="flex" gap={1} mb={2}>
+              <Autocomplete
+                options={protein1Options}
+                freeSolo
+                value={protein1}
+                onInputChange={(event, newValue) => setProtein1(newValue)}
+                sx={{ width: "100%" }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Protein 1" variant="outlined" fullWidth />
+                )}
               />
-            )}
-          </MDBox>
-        </Card>
+              <Autocomplete
+                options={protein2Options}
+                freeSolo
+                value={protein2}
+                onInputChange={(event, newValue) => setProtein2(newValue)}
+                sx={{ width: "100%" }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Protein 2" variant="outlined" fullWidth />
+                )}
+              />
+              <Autocomplete
+                options={diseaseOptions}
+                freeSolo
+                value={disease}
+                onInputChange={(event, newValue) => setDisease(newValue)}
+                sx={{ width: "100%" }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Disease" variant="outlined" fullWidth />
+                )}
+              />
+              <MDButton
+                variant="contained"
+                color="info"
+                onClick={fetchFilteredData}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Filter"}
+              </MDButton>
+            </MDBox>
+            <MDBox py={1} style={{ maxHeight: "auto", overflowY: "auto" }}>
+              {loading ? (
+                <MDTypography variant="caption">Loading data...</MDTypography>
+              ) : noResults ? (
+                <MDTypography variant="h6" color="error" align="center">
+                  No results found for the given filters.
+                </MDTypography>
+              ) : (
+                <DataTable
+                  table={{ columns, rows }}
+                  isSorted
+                  showTotalEntries
+                  noEndBorder
+                  pagination
+                />
+              )}
+            </MDBox>
+          </Card>
+        </MDBox>
+        <Footer />
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }
