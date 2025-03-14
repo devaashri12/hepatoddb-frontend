@@ -83,10 +83,10 @@ function Metabolites() {
               color="primary"
               fullWidth
               onClick={fetchMetaboliteData}
-              disabled={loading}
+              disabled={disease === ""}
               sx={{ mt: 2 }}
             >
-              {loading ? "Searching..." : "Search"}
+              {disease ? "Search" : "Select a Disease"}
             </Button>
           </Card>
 

@@ -84,10 +84,10 @@ function TPM() {
               color="primary"
               fullWidth
               onClick={fetchTpmData}
-              disabled={loading}
+              disabled={gene === ""}
               sx={{ mt: 2 }}
             >
-              {loading ? "Searching..." : "Search"}
+              {gene ? "Search" : "Select a Gene"}
             </Button>
           </Card>
 
