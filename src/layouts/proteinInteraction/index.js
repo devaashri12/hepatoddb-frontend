@@ -1,67 +1,61 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
-import PropTypes from "prop-types";
+import MDButton from "components/MDButton";
 
 function ProteinInteraction() {
-  // Static Columns
   const [columns] = useState([
+    { Header: "Protein 1", accessor: "protein1", align: "left" },
+    { Header: "Protein 2", accessor: "protein2", align: "left" },
+    { Header: "Score", accessor: "score", align: "left" },
     { Header: "Disease", accessor: "disease", align: "left" },
-    { Header: "Disease ID", accessor: "disease_id", align: "left" },
-    { Header: "Gene ID", accessor: "gene_id", align: "left" },
-    { Header: "Gene Name", accessor: "gene_name", align: "left" },
-    { Header: "Protein Name", accessor: "protein_name", align: "left" },
-    {
-      Header: "Pathway",
-      accessor: "pathway",
-      align: "left",
-      Cell: ({ cell }) => {
-        const value = cell?.value; // Safe access
-        return value && value !== "null" ? (
-          <a
-            href={`https://www.kegg.jp/kegg-bin/show_pathway?${value}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#007bff", textDecoration: "none", fontWeight: "bold" }}
-          >
-            {value}
-          </a>
-        ) : (
-          "null"
-        );
-      },
-    },
   ]);
 
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [noResults, setNoResults] = useState(false);
+
+  const [protein1, setProtein1] = useState("");
+  const [protein2, setProtein2] = useState("");
+  const [disease, setDisease] = useState("");
+
+  const [protein1Options, setProtein1Options] = useState([]);
+  const [protein2Options, setProtein2Options] = useState([]);
+  const [diseaseOptions, setDiseaseOptions] = useState([]);
 
   useEffect(() => {
-    fetchAllData();
+    fetchFilteredData();
+    fetchUniqueValues();
   }, []);
 
-  const fetchAllData = async () => {
+  // Fetch all records initially
+  const fetchFilteredData = async () => {
     let allRows = [];
     let page = 1;
     let totalPages = 1;
-
     setLoading(true);
+    setNoResults(false);
+
     try {
       do {
-        const response = await axios.get(`http://localhost:4000/disease?page=${page}&limit=10`);
-        console.log(`API Response (Page ${page}):`, response.data.data); // Debugging API response
+        const params = {};
+        if (protein1) params.protein1 = protein1;
+        if (protein2) params.protein2 = protein2;
+        if (disease) params.disease = disease;
+
+        const response = await axios.get("http://localhost:4000/protein-interaction", { params });
         const newRows = response.data.data.map((item) => ({
+          protein1: item.protein1 || "null",
+          protein2: item.protein2 || "null",
+          score: item.score || "null",
           disease: item.disease || "null",
-          disease_id: item.disease_id || "null",
-          gene_id: item.gene_id || "null",
-          gene_name: item.gene_name || "null",
-          protein_name: item.protein_name || "null",
-          pathway: item.pathway || "null",
         }));
 
         allRows = [...allRows, ...newRows];
@@ -70,42 +64,127 @@ function ProteinInteraction() {
       } while (page <= totalPages);
 
       setRows(allRows);
+      setNoResults(allRows.length === 0);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setNoResults(true);
     }
+
     setLoading(false);
+  };
+
+  // Fetch unique values for suggestions
+  const fetchUniqueValues = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/protein-interaction/unique-values");
+      setProtein1Options(response.data.protein1 || []);
+      setProtein2Options(response.data.protein2 || []);
+      setDiseaseOptions(response.data.disease || []);
+    } catch (error) {
+      console.error("Error fetching unique values:", error);
+    }
   };
 
   return (
     <DashboardLayout>
       <MDBox py={5}>
-        <MDBox>
-          <Card>
-            <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
+        <Card sx={{ padding: 3 }}>
+          <MDBox display="flex" gap={2} mb={3}>
+            {/* Autocomplete for Protein 1 */}
+            <Autocomplete
+              options={protein1Options}
+              freeSolo
+              value={protein1}
+              onInputChange={(event, newValue) => setProtein1(newValue)}
+              sx={{ width: "100%" }} // ✅ Ensures full width
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Protein 1"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { height: 50 }, // ✅ Adjusts height
+                  }}
+                />
+              )}
+            />
+            <Autocomplete
+              options={protein2Options}
+              freeSolo
+              value={protein2}
+              onInputChange={(event, newValue) => setProtein2(newValue)}
+              sx={{ width: "100%" }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Protein 2"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { height: 50 },
+                  }}
+                />
+              )}
+            />
+            <Autocomplete
+              options={diseaseOptions}
+              freeSolo
+              value={disease}
+              onInputChange={(event, newValue) => setDisease(newValue)}
+              sx={{ width: "100%" }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Disease"
+                  variant="outlined"
+                  fullWidth
+                  InputLabelProps={{ sx: { color: "rgba(255, 255, 255, 0.45)" } }}
+                  InputProps={{
+                    ...params.InputProps,
+                    sx: { height: 50 },
+                  }}
+                />
+              )}
+            />
+            <MDButton
+              variant="contained"
+              color="info"
+              onClick={fetchFilteredData}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Filter"}
+            </MDButton>
+          </MDBox>
+
+          <MDBox style={{ maxHeight: "auto", overflowY: "auto" }}>
+            {loading ? (
+              <MDTypography variant="caption" color="white">
+                Loading data...
+              </MDTypography>
+            ) : noResults ? (
+              <MDTypography variant="h6" color="error" align="center">
+                No results found for the given filters, please check and try again.
+              </MDTypography>
+            ) : (
               <DataTable
                 table={{ columns, rows }}
                 isSorted={true}
                 showTotalEntries={true}
                 noEndBorder={false}
-                canSearch={true}
-                pagination={true} // Keep inbuilt pagination
+                pagination={true}
               />
-              {loading && (
-                <MDTypography variant="caption" color="white">
-                  Loading all data...
-                </MDTypography>
-              )}
-            </MDBox>
-          </Card>
-        </MDBox>
+            )}
+          </MDBox>
+        </Card>
       </MDBox>
       <Footer />
     </DashboardLayout>
   );
 }
-ProteinInteraction.propTypes = {
-  cell: PropTypes.shape({
-    value: PropTypes.string, // Define 'value' as a string
-  }),
-};
+
 export default ProteinInteraction;
