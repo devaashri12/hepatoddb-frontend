@@ -83,7 +83,7 @@ function KnowledgeGraph() {
                 color="primary"
                 fullWidth
                 onClick={fetchDiseaseImage}
-                disabled={disease === ""}
+                // disabled={disease === ""}
               >
                 {disease ? "Search" : "Select a Disease"}
               </Button>
