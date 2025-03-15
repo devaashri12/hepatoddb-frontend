@@ -124,7 +124,7 @@ function TPM() {
                             🆔 <strong>Gene ID:</strong> {item.gene_id}
                           </MDTypography>
                           <MDTypography variant="h4" color="white">
-                            🫀 <strong>Liver:</strong> {item.liver}
+                            📊 <strong>Liver:</strong> {item.liver}
                           </MDTypography>
                         </MDBox>
                       </Card>
