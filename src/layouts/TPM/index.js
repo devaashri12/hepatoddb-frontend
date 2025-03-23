@@ -63,7 +63,7 @@ function TPM() {
         {/* Centered Heading */}
         <MDBox py={5} mt={4} display="flex" justifyContent="center" alignItems="center">
           <MDTypography variant="h1" color="info" textGradient>
-            Transcripts per Million TPM
+            Transcripts per Million (TPM)
           </MDTypography>
         </MDBox>
 

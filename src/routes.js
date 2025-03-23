@@ -6,6 +6,7 @@ import KnowledgeGraph from "layouts/knowledgeGrpah";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Drugs from "layouts/drugs";
 
 const routes = [
   {
@@ -47,6 +48,14 @@ const routes = [
     icon: <Icon fontSize="small">bar_chart_4_bars</Icon>,
     route: "/transcriptspermillion",
     component: <TPM />,
+  },
+  {
+    type: "collapse",
+    name: "Drug-induced Diseases",
+    key: "drugs",
+    icon: <Icon fontSize="small">medication_liquid</Icon>,
+    route: "/drugs",
+    component: <Drugs />,
   },
 ];
 
