@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import CircleIcon from "@mui/icons-material/Circle";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -58,15 +58,27 @@ function KnowledgeGraph() {
   return (
     <DashboardLayout>
       <MDBox display="flex" flexDirection="column" minHeight="98vh">
-        {/* Centered Heading */}
-        <MDBox py={2} mt={4} display="flex" justifyContent="center" alignItems="center">
+        <MDBox
+          py={5}
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+        >
           <MDTypography variant="h1" color="info" textGradient>
             Knowledge Graphs
+          </MDTypography>
+          <MDTypography variant="h5" color="text" mt={3} maxWidth="800px">
+            🟠 - Disease
+          </MDTypography>
+          <MDTypography variant="h5" color="text" mt={0} maxWidth="800px">
+            🟣 - Gene
           </MDTypography>
         </MDBox>
 
         {/* Search Box */}
-        <MDBox py={4} flexGrow={1}>
+        <MDBox py={1} flexGrow={1}>
           <Card sx={{ p: 3, maxWidth: 600, mx: "auto" }}>
             <Autocomplete
               options={diseaseOptions}

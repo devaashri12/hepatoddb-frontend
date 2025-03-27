@@ -59,15 +59,27 @@ function Metabolites() {
     <DashboardLayout>
       {/* Ensuring full height layout */}
       <MDBox display="flex" flexDirection="column" minHeight="98vh">
-        {/* Centered Heading */}
-        <MDBox py={5} mt={4} display="flex" justifyContent="center" alignItems="center">
+        <MDBox
+          py={5}
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+        >
           <MDTypography variant="h1" color="info" textGradient>
             Metabolites
+          </MDTypography>
+          <MDTypography variant="subtitle2" color="text" mt={3} maxWidth="800px">
+            This tool allows users to search for liver-related diseases and retrieve information on
+            the metabolite involved in the disease, which may serve as a biomarker for diagnosis or
+            disease progression and Understanding metabolite changes can aid in early detection and
+            personalized treatment strategies.
           </MDTypography>
         </MDBox>
 
         {/* Main content with flexGrow to push footer down */}
-        <MDBox py={5} flexGrow={1}>
+        <MDBox py={2} flexGrow={1}>
           <Card sx={{ p: 3, maxWidth: 600, mx: "auto" }}>
             <Autocomplete
               options={diseaseOptions}

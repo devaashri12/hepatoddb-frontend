@@ -100,6 +100,24 @@ function Drugs() {
   return (
     <DashboardLayout>
       <MDBox display="flex" flexDirection="column" minHeight="108vh">
+        <MDBox
+          py={5}
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+        >
+          <MDTypography variant="h1" color="info" textGradient>
+            Drug Induced Diseases
+          </MDTypography>
+          {/* <MDTypography variant="subtitle2" color="text" mt={3} maxWidth="1000px">
+            This tool allows users to search for liver-related diseases and retrieve information on
+            the metabolite involved in the disease, which may serve as a biomarker for diagnosis or
+            disease progression and Understanding metabolite changes can aid in early detection and
+            personalized treatment strategies.
+          </MDTypography> */}
+        </MDBox>
         <MDBox py={1} flexGrow={1}>
           <Card sx={{ padding: 2 }}>
             <MDBox display="flex" gap={1} mb={2}>

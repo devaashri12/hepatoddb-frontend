@@ -87,6 +87,26 @@ function ProteinInteraction() {
   return (
     <DashboardLayout>
       <MDBox display="flex" flexDirection="column" minHeight="108vh">
+        <MDBox
+          py={5}
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+        >
+          <MDTypography variant="h1" color="info" textGradient>
+            Protein Protein Interactions
+          </MDTypography>
+          <MDTypography variant="subtitle2" color="text" mt={3} maxWidth="1000px">
+            This page in HepatoDB provides insights into protein-protein interactions associated
+            with liver diseases. Users can filter results by selecting Protein 1, Protein 2, or
+            Disease, enabling targeted exploration of interaction networks. Each interaction is
+            scored, indicating the confidence level of the relationship. This tool helps researchers
+            understand molecular pathways, identify key regulators, and explore potential
+            therapeutic targets for liver-related disorders.
+          </MDTypography>
+        </MDBox>
         <MDBox py={0} flexGrow={1}>
           <Card sx={{ padding: 3 }}>
             <MDBox display="flex" gap={1} mb={2}>

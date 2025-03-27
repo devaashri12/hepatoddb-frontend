@@ -80,7 +80,25 @@ function Dataset() {
     <DashboardLayout>
       {/* Full page layout with flexbox */}
       <MDBox display="flex" flexDirection="column" minHeight="98vh">
-        {/* Main Content */}
+        <MDBox
+          py={5}
+          mt={2}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+        >
+          <MDTypography variant="h1" color="info" textGradient>
+            Dataset
+          </MDTypography>
+          <MDTypography variant="subtitle2" color="text" mt={3} maxWidth="1000px">
+            A multi-omics database for hepatic diseases integrates various omics data (genomics,
+            transcriptomics, proteomics, metabolomics, and epigenomics) to study liver diseases.
+            These databases help identify disease biomarkers, genetic mutations, and metabolic
+            pathways associated with liver conditions, improving diagnosis, treatment, and drug
+            discovery.
+          </MDTypography>
+        </MDBox>
         <MDBox py={2} flexGrow={1}>
           <MDBox>
             <Card>
