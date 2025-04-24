@@ -1,3 +1,3 @@
 # Hepatoddb Frontend
 
-# [Hepatoddb Backend](https://github.com/osjohn01/hepatoddb-backend)
+# [Hepatoddb Backend](https://github.com/devaashri12/hepatoddb-backend)
