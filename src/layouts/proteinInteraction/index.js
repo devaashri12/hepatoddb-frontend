@@ -48,7 +48,7 @@ function ProteinInteraction() {
         if (disease) params.disease = disease;
 
         const response = await axios.get(
-          `http://localhost:4000/protein-interaction?page=${page}&limit=10`,
+          `http://172.208.49.107:4000/protein-interaction?page=${page}&limit=10`,
           { params }
         );
         const newRows = response.data.data.map((item) => ({
@@ -75,7 +75,7 @@ function ProteinInteraction() {
 
   const fetchUniqueValues = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/protein-interaction/unique-values");
+      const response = await axios.get("http://172.208.49.107:4000/protein-interaction/unique-values");
       setProtein1Options(response.data.protein1 || []);
       setProtein2Options(response.data.protein2 || []);
       setDiseaseOptions(response.data.disease || []);

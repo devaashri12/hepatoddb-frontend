@@ -21,7 +21,7 @@ function Metabolites() {
   // Fetch unique disease names
   useEffect(() => {
     axios
-      .get("http://localhost:4000/metabolites/unique-values")
+      .get("http://172.208.49.107:4000/metabolites/unique-values")
       .then((response) => setDiseaseOptions(response.data.disease || []))
       .catch((error) => console.error("Error fetching disease options:", error));
   }, []);
@@ -40,7 +40,7 @@ function Metabolites() {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/metabolites?disease=${encodeURIComponent(disease)}`
+        `http://172.208.49.107:4000/metabolites?disease=${encodeURIComponent(disease)}`
       );
       if (response.data.length === 0) {
         setError("No data found for the entered disease.");

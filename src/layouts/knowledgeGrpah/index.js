@@ -20,7 +20,7 @@ function KnowledgeGraph() {
   // Fetch unique disease names on mount
   useEffect(() => {
     axios
-      .get("http://localhost:4000/protein-interaction/unique-values")
+      .get("http://172.208.49.107:4000/protein-interaction/unique-values")
       .then((response) => {
         setDiseaseOptions(response.data.disease || []);
       })

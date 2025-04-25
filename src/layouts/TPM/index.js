@@ -20,7 +20,7 @@ function TPM() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/tpm/unique-values")
+      .get("http://172.208.49.107:4000/tpm/unique-values")
       .then((response) => setGeneOptions(response.data.gene || []))
       .catch((error) => console.error("Error fetching Gene options:", error));
   }, []);
@@ -38,7 +38,7 @@ function TPM() {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/tpm?name=${encodeURIComponent(gene)}`
+        `http://172.208.49.107:4000/tpm?name=${encodeURIComponent(gene)}`
       );
       if (response.data.length === 0) {
         setError("No data found for the entered gene.");

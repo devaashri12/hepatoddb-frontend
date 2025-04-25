@@ -43,7 +43,7 @@ function Drugs() {
       const params = {};
       if (disease) params.disease = disease;
 
-      const response = await axios.get("http://localhost:4000/drugs", { params });
+      const response = await axios.get("http://172.208.49.107:4000/drugs", { params });
       const newRows = response.data.data.map((item) => ({
         disease: item.disease || "null",
         drug: item.drug || "null",
@@ -82,7 +82,7 @@ function Drugs() {
 
   const fetchUniqueValues = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/drugs/unique-values");
+      const response = await axios.get("http://172.208.49.107:4000/drugs/unique-values");
       setDiseaseOptions(response.data.diseases || []);
     } catch (error) {
       console.error("Error fetching unique values:", error);
