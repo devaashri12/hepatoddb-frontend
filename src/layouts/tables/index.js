@@ -53,7 +53,9 @@ function Dataset() {
     setLoading(true);
     try {
       do {
-        const response = await axios.get(`http://172.208.49.107:4000/disease?page=${page}&limit=10`);
+        const response = await axios.get(
+          `http://172.208.49.107:4000/disease?page=${page}&limit=10`
+        );
         console.log(`API Response (Page ${page}):`, response.data.data);
         const newRows = response.data.data.map((item) => ({
           disease: item.disease || "null",

@@ -75,7 +75,9 @@ function ProteinInteraction() {
 
   const fetchUniqueValues = async () => {
     try {
-      const response = await axios.get("http://172.208.49.107:4000/protein-interaction/unique-values");
+      const response = await axios.get(
+        "http://172.208.49.107:4000/protein-interaction/unique-values"
+      );
       setProtein1Options(response.data.protein1 || []);
       setProtein2Options(response.data.protein2 || []);
       setDiseaseOptions(response.data.disease || []);
